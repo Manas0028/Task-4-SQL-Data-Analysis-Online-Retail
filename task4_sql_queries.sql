@@ -1,0 +1,25 @@
+USE ecommerce_db;
+
+SELECT * FROM online_retail;
+SELECT * FROM online_retail LIMIT 10;
+SELECT DISTINCT Country FROM online_retail;
+SELECT * FROM online_retail WHERE Country='United Kingdom';
+SELECT * FROM online_retail WHERE UnitPrice>20;
+SELECT Description,UnitPrice FROM online_retail ORDER BY UnitPrice DESC;
+SELECT COUNT(DISTINCT InvoiceNo) AS Total_Orders FROM online_retail;
+SELECT COUNT(DISTINCT CustomerID) AS Total_Customers FROM online_retail;
+SELECT COUNT(DISTINCT StockCode) AS Total_Products FROM online_retail;
+SELECT SUM(Quantity*UnitPrice) AS Total_Revenue FROM online_retail;
+SELECT AVG(UnitPrice) AS Average_Price FROM online_retail;
+SELECT AVG(OrderTotal) AS Average_Order_Value FROM (SELECT InvoiceNo,SUM(Quantity*UnitPrice) AS OrderTotal FROM online_retail GROUP BY InvoiceNo) t;
+SELECT Country,SUM(Quantity*UnitPrice) Revenue FROM online_retail GROUP BY Country ORDER BY Revenue DESC;
+SELECT CustomerID,SUM(Quantity*UnitPrice) Revenue FROM online_retail WHERE CustomerID IS NOT NULL GROUP BY CustomerID ORDER BY Revenue DESC LIMIT 10;
+SELECT Description,SUM(Quantity) Total_Sold FROM online_retail GROUP BY Description ORDER BY Total_Sold DESC LIMIT 10;
+SELECT YEAR(InvoiceDate) Year,MONTH(InvoiceDate) Month,SUM(Quantity*UnitPrice) Revenue FROM online_retail GROUP BY YEAR(InvoiceDate),MONTH(InvoiceDate);
+CREATE OR REPLACE VIEW customer_sales AS SELECT CustomerID,SUM(Quantity*UnitPrice) TotalSales FROM online_retail WHERE CustomerID IS NOT NULL GROUP BY CustomerID;
+SELECT * FROM customer_sales ORDER BY TotalSales DESC;
+CREATE INDEX idx_customer ON online_retail(CustomerID);
+CREATE INDEX idx_country ON online_retail(Country);
+SELECT * FROM online_retail WHERE CustomerID IS NULL;
+SELECT SUM(Quantity) AS Total_Quantity FROM online_retail;
+SELECT Description,COUNT(*) Purchase_Count FROM online_retail GROUP BY Description ORDER BY Purchase_Count DESC LIMIT 10;
